@@ -1,0 +1,48 @@
+{
+  "name": "gitclick",
+  "version": "0.0.1",
+  "description": "Easily create remote repositories from your command line.",
+  "keywords": [
+    "gitclick",
+    "git",
+    "github",
+    "bitbucket"
+  ],
+  "homepage": "https://github.com/maximilianschmitt/gitclick",
+  "bugs": "https://github.com/maximilianschmitt/gitclick/issues",
+  "license": "MIT",
+  "author": {
+    "name": "Maximilian Schmitt",
+    "email": "maximilian.schmitt@googlemail.com",
+    "url": "http://maximilianschmitt.me"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maximilianschmitt/gitclick.git"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "rewire": "^2.0.0"
+  },
+  "dependencies": {
+    "gitclick-provider-github": "0.0.1",
+    "gitclick-provider-bitbucket": "0.0.1",
+    "gitclick-util": "0.0.1",
+    "bluebird": "^1.2.4",
+    "colors": "^0.6.2",
+    "minimist": "0.0.9",
+    "nedb": "^0.10.5",
+    "path-extra": "^0.2.0",
+    "promptly": "^0.2.0",
+    "requireg": "^0.1.3",
+    "underscore": "^1.6.0",
+    "space-align": "0.0.2",
+    "touch": "0.0.3"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "bin": {
+    "gitclick": "cli/gitclick.js"
+  }
+}

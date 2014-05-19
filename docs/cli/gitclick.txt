@@ -1,0 +1,22 @@
+  gitclick is a command line tool for creating remote git-repositories.
+
+Managing boxes:
+
+  gitclick box list				List your existing boxes
+  gitclick box add 				Interactive prompt for creating a new box
+  gitclick box remove <boxname> 		Remove box with name <boxname>
+
+Creating remote repositories:
+
+  gitclick remote <box-name>			Create remote repository with current directory name as repository name
+  gitclick remote <box-name>:<repo-name> 	Create remote repo with <repo-name> as repo name
+
+  -i, --issues					With/without issues
+  -w, --wiki					With/without wiki
+  -o, --public					Create as public repository
+  -r, --private					Create as private repository
+
+Options:
+
+  -v, --version					Output version number
+  -h, --help					Output usage information
