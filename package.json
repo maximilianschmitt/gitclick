@@ -1,6 +1,6 @@
 {
   "name": "gitclick",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Easily create remote repositories from your command line.",
   "keywords": [
     "gitclick",
@@ -25,7 +25,7 @@
     "rewire": "^2.0.0"
   },
   "dependencies": {
-    "gitclick-provider-github": "0.0.1",
+    "gitclick-provider-github": "0.0.2",
     "gitclick-provider-bitbucket": "0.0.1",
     "gitclick-util": "0.0.1",
     "bluebird": "^1.2.4",
