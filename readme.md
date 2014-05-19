@@ -54,12 +54,6 @@ gitclick remote <box-name>:<repo-name>
 
 Creates remote repo for specified box with specified name as repo name.
 
-```
-gitclick remote <box-name>:<organisation-name>/<repo-name>
-```
-
-Creates remote repo for specified box with specified name as repo name for specified organisation.
-
 #### Options
 
 * `--issues <true/false>` (boolean)
