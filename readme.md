@@ -65,6 +65,4 @@ Creates remote repo for specified box with specified name as repo name.
 
 ## Planned features
 
-* Optional data encryption using master password + crypto
 * OAuth authentication
-* Make provider authentication (fields) provider responsibility

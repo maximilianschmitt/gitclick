@@ -81,7 +81,7 @@ createRemote.parseConstructor = function(input) {
     var colon = input.indexOf(':');
     if (colon === -1) {
         config.box = input;
-        config.repository.name = path.basename(process.env.PWD);
+        config.repository.name = path.basename(process.cwd());
 
         return config;
     }
