@@ -4,10 +4,7 @@
 const gitclick = require('../main');
 const path = require('path');
 const fs = require('fs');
-const thenify = require('thenify');
 const minimist = require('minimist');
-const GitHubProvider = require('gitclick-provider-github');
-const BitbucketProvider = require('gitclick-provider-bitbucket');
 const assign = require('object.assign');
 const argsParser = require('./args-parser');
 
@@ -68,11 +65,8 @@ function add() {
     account = answers.account;
     provider = answers.provider;
     
-    if (provider === 'github') {
-      return GitHubProvider.prompt();
-    }
-
-    return BitbucketProvider.prompt();
+    const Provider = require('gitclick-provider-' + provider);
+    return Provider.prompt();
   })
   .then(function(answers) {
     const config = assign({ provider: provider }, answers);

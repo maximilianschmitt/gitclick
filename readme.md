@@ -18,3 +18,9 @@ Commands:
   gitclick -h, --help          Output usage information
 
 ```
+
+## Todo
+
+* Write more tests
+* Setup .gitclick config-file in home directory
+* Allow setting of home directory through environment variables

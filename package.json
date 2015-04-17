@@ -34,7 +34,6 @@
     "jsonfile": "^2.0.0",
     "minimist": "^1.1.1",
     "object.assign": "^2.0.1",
-    "thenify": "^3.1.0",
     "thenify-all": "^1.6.0"
   },
   "devDependencies": {
