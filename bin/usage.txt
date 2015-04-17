@@ -1,5 +1,5 @@
 
-Commands:
+Usage:
   
   gitclick create [<repository>] [on <account>] [--no-issues] [--no-wiki] [--private]
 

@@ -1,7 +1,7 @@
 # gitclick
 
 ```
-Commands:
+Usage:
   
   gitclick create [<repository>] [on <account>] [--no-issues] [--no-wiki] [--private]
 
@@ -16,7 +16,6 @@ Commands:
 
   gitclick -v, --version       Output version number
   gitclick -h, --help          Output usage information
-
 ```
 
 ## Todo
