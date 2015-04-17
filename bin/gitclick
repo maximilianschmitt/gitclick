@@ -1,0 +1,151 @@
+#!/usr/bin/env node
+'use strict';
+
+const gitclick = require('../main');
+const path = require('path');
+const fs = require('fs');
+const thenify = require('thenify');
+const minimist = require('minimist');
+const GitHubProvider = require('gitclick-provider-github');
+const BitbucketProvider = require('gitclick-provider-bitbucket');
+const assign = require('object.assign');
+const argsParser = require('./args-parser');
+
+const prompt = function(opts) {
+  return new Promise(function(res) {
+    require('inquirer').prompt(opts, res);
+  });
+};
+
+const argv = minimist(process.argv.slice(2));
+
+function create() {
+  gitclick
+    .create(argsParser.create(argv))
+    .then(function(repository) {
+      console.log(`Repository '${repository.name}' created.`);
+      console.log('SSH URL: ' + repository.sshUrl);
+      console.log('Clone URL: ' + repository.cloneUrl);
+    })
+    .catch(function(err) {
+      if (err.name === 'NoAccountSetError') {
+        console.log('Error: No account set. Use `gitclick add` to add an account.');
+        return;
+      }
+
+      e(err);
+    });
+}
+
+function add() {
+  let account, provider;
+
+  prompt([
+    {
+      type: 'input',
+      name: 'account',
+      message: 'Choose a name',
+      validate: function(value) {
+        if (value.indexOf(' ') !== -1) {
+          return 'Please don\'t use spaces in your account\'s name';
+        }
+
+        return true;
+      }
+    },
+    {
+      type: 'list',
+      name: 'provider',
+      message: 'Where is your account hosted?',
+      default: 'github',
+      choices: [
+        { value: 'github', name: 'GitHub' },
+        { value: 'bitbucket', name: 'Bitbucket' }
+      ]
+    }
+  ])
+  .then(function(answers) {
+    account = answers.account;
+    provider = answers.provider;
+    
+    if (provider === 'github') {
+      return GitHubProvider.prompt();
+    }
+
+    return BitbucketProvider.prompt();
+  })
+  .then(function(answers) {
+    const config = assign({ provider: provider }, answers);
+    return gitclick.add(account, config);
+  })
+  .then(function() {
+    console.log(`Account '${account}' added.`);
+  })
+  .catch(function(err) {
+    console.log(err.stack);
+  });
+}
+
+function list() {
+  gitclick
+    .list()
+    .then(function(accounts) {
+      accounts.forEach(function(account) {
+        console.log(`${account.account} (${account.provider})`);
+      });
+    });
+}
+
+function remove() {
+  const account = argv._[1];
+
+  gitclick
+    .remove(account)
+    .then(function() {
+      console.log(`Account '${account}' was removed.`);
+    });
+}
+
+function use() {
+  const account = argv._[1];
+  
+  gitclick
+    .use(account)
+    .then(function() {
+      console.log(`Now using ${account} by default when creating new repositories.`);
+    })
+    .catch(function(err) {
+      if (err.name === 'AccountNotFoundError') {
+        console.log(`Error: Account '${account}' was not found.`);
+        return;
+      }
+
+      e(err);
+    });
+}
+
+function help() {
+  console.log(require('../package.json').version);
+}
+
+function version() {
+  fs.createReadStream(path.join(__dirname, 'usage.txt')).pipe(process.stdout);
+}
+
+function e(err) {
+  setTimeout(function() {
+    throw err;
+  });
+}
+
+switch (argv._[0]) {
+  case 'create': create(); return;
+  case 'list': list(); return;
+  case 'add': add(); return;
+  case 'remove': remove(); return;
+  case 'use': use(); return;
+}
+
+if (argv.v || argv.version) { help(); return; }
+
+version();
