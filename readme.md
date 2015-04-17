@@ -24,3 +24,7 @@ Commands:
 * Write more tests
 * Setup .gitclick config-file in home directory
 * Allow setting of home directory through environment variables
+
+### Maybe
+
+* Add optional encryption (should be easy with something like bcrypt)
