@@ -7,6 +7,7 @@ const minimist = require('minimist');
 const assign = require('object.assign');
 const argsParser = require('./args-parser');
 const homeDir = require('home-dir');
+const co = require('co');
 
 const gitclick = require('../main')(process.env.GITCLICK_STORAGE_PATH || homeDir('./.gitclick'));
 
@@ -91,13 +92,14 @@ function add() {
 }
 
 function list() {
-  gitclick
-    .list()
-    .then(function(accounts) {
-      accounts.forEach(function(account) {
-        console.log(`${account.account} (${account.provider})`);
-      });
+  co(function*() {
+    const accounts = yield gitclick.list();
+    const defaultAccount = yield gitclick.defaultAccount();
+
+    accounts.forEach(function(account) {
+      console.log(`${account.account === defaultAccount ? '* ' : ''}${account.account} (${account.provider})`);
     });
+  });
 }
 
 function remove() {
