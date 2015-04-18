@@ -22,6 +22,9 @@ const gitclick = function(storePath) {
     use: function(account) {
       return s.setAccount(account);
     },
+    defaultAccount: function() {
+      return s.getAccount();
+    },
     create: function(opts) {
       return co(function*() {
         const repository = opts.repository || path.basename(process.cwd());

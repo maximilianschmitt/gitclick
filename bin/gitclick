@@ -36,6 +36,14 @@ function create() {
     });
 }
 
+function defaultAccount() {
+  gitclick
+    .defaultAccount()
+    .then(function(account) {
+      console.log(account);
+    });
+}
+
 function add() {
   let account, provider;
 
@@ -140,6 +148,7 @@ switch (argv._[0]) {
   case 'add': add(); return;
   case 'remove': remove(); return;
   case 'use': use(); return;
+  case 'default': defaultAccount(); return;
 }
 
 if (argv.v || argv.version) { help(); return; }
