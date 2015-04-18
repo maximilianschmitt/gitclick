@@ -33,6 +33,11 @@ function create() {
         return;
       }
 
+      if (err.name === 'ProviderError' && err.message === 'Validation Failed') {
+        console.log('Error: Repository could not be created. Maybe it already exists?');
+        return;
+      }
+
       e(err);
     });
 }
