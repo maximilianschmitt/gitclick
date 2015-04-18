@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 'use strict';
 
-const gitclick = require('../main');
 const path = require('path');
 const fs = require('fs');
 const minimist = require('minimist');
 const assign = require('object.assign');
 const argsParser = require('./args-parser');
+const homeDir = require('home-dir');
+
+const gitclick = require('../main')(process.env.GITCLICK_STORAGE_PATH || homeDir('./.gitclick'));
 
 const prompt = function(opts) {
   return new Promise(function(res) {

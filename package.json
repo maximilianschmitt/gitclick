@@ -30,6 +30,7 @@
   "dependencies": {
     "co": "^4.5.1",
     "create-error": "^0.3.1",
+    "home-dir": "^1.0.0",
     "inquirer": "^0.8.2",
     "jsonfile": "^2.0.0",
     "minimist": "^1.1.1",

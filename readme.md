@@ -1,28 +1,42 @@
 # gitclick
 
+Create remote repositories on GitHub/Bitbucket from your terminal.
+
+## Installation
+
 ```
-Usage:
-  
-  gitclick create [<repository>] [on <account>] [--no-issues] [--no-wiki] [--private]
+$ npm i gitclick -g
+```
 
-    Creates a public repository with issues and wiki by default
-    <repository> defaults to the name of the current folder
-    <account> defaults to the default account
+## Usage
 
-  gitclick list                List your existing accountes
-  gitclick use <account>       Set <account> as default account
-  gitclick add                 Interactive prompt for creating a new account
-  gitclick remove <account>    Remove <account>
+```
+gitclick create [<repository>] [on <account>] [--no-issues] [--no-wiki] [--private]
 
-  gitclick -v, --version       Output version number
-  gitclick -h, --help          Output usage information
+  Creates a public repository with issues and wiki by default
+  <repository> defaults to the name of the current folder
+  <account> defaults to the default account
+
+gitclick list                List your existing accountes
+gitclick use <account>       Set <account> as default account
+gitclick add                 Interactive prompt for creating a new account
+gitclick remove <account>    Remove <account>
+
+gitclick -v, --version       Output version number
+gitclick -h, --help          Output usage information
+```
+
+## Configuration
+
+You can specify where gitclick should store its configuration through the environment variable `GITCLICK_STORAGE_PATH`. For example, if you would like to sync your gitclick configuration via Dropbox, you could add something like this to your `profile`:
+
+```
+export GITCLICK_STORAGE_PATH=~/Dropbox/.gitclick
 ```
 
 ## Todo
 
 * Write more tests
-* Setup .gitclick config-file in home directory
-* Allow setting of home directory through environment variables
 
 ### Maybe
 
