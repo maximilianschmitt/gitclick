@@ -37,6 +37,46 @@ gitclick -v, --version       Output version number
 gitclick -h, --help          Output usage information
 ```
 
+## Examples
+
+Assume that we are in a folder called `my-project`. We have added two accounts to gitclick: `personal` (default) and work.
+
+### Create a repository called `my-project` on account `personal`
+
+```
+$ gitclick create
+```
+
+### Create a repository called `my-project` on account `work`
+
+```
+$ gitclick create on work
+```
+
+### Create a repository called `awesome-project` on account `personal`
+
+```
+$ gitclick create awesome-project
+```
+
+### Create a private repository with neither issues nor a wiki
+
+```
+$ gitclick create --no-issues --no-wiki --private
+```
+
+### Create a private repository called `secret-project` on account `work` and add it as remote origin afterwards
+
+```
+$ gitclick create secret-project on work --private --set-remote
+```
+
+### Create a repository called `my-project` and add it as remote secret afterwards
+
+```
+$ gitclick create secret-project on work --set-remote=secret
+```
+
 ## Configuration
 
 You can specify where gitclick should store its configuration through the environment variable `GITCLICK_STORAGE_PATH`. For example, if you would like to sync your gitclick configuration via Dropbox, you could add something like this to your `profile`:
