@@ -39,7 +39,7 @@ gitclick -h, --help          Output usage information
 
 ## Examples
 
-Assume that we are in a folder called `my-project`. We have added two accounts to gitclick: `personal` (default) and work.
+Assume that we are in a folder called `my-project`. We have added two accounts to gitclick: `personal` (default) and `work`.
 
 **Create a repository called `my-project` on account `personal`:**
 
