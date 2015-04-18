@@ -93,5 +93,29 @@ describe('argsParser', function() {
         private: true
       });
     });
+
+    it('can set remote', function() {
+      const opts = argsParser.create({ _: ['create'], remote: true });
+      expect(opts).to.deep.equal({
+        repository: null,
+        account: null,
+        issues: true,
+        wiki: true,
+        private: false,
+        remote: 'origin'
+      });
+    });
+
+    it('can specify remote', function() {
+      const opts = argsParser.create({ _: ['create'], remote: 'remote-name' });
+      expect(opts).to.deep.equal({
+        repository: null,
+        account: null,
+        issues: true,
+        wiki: true,
+        private: false,
+        remote: 'remote-name'
+      });
+    });
   });
 });

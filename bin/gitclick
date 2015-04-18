@@ -20,10 +20,17 @@ const prompt = function(opts) {
 const argv = minimist(process.argv.slice(2));
 
 function create() {
+  const opts = argsParser.create(argv);
+
   gitclick
-    .create(argsParser.create(argv))
+    .create(opts)
     .then(function(repository) {
       console.log(`Repository '${repository.name}' created.`);
+
+      if (opts.setRemote) {
+        console.log(`Remote '${opts.setRemote}' set to: ${repository.sshUrl}`);
+      }
+
       console.log('SSH URL: ' + repository.sshUrl);
       console.log('Clone URL: ' + repository.cloneUrl);
     })

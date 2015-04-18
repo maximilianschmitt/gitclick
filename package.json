@@ -1,6 +1,6 @@
 {
   "name": "gitclick",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Easily create remote repositories from your command line.",
   "keywords": [
     "gitclick",
@@ -37,6 +37,7 @@
     "jsonfile": "^2.0.0",
     "minimist": "^1.1.1",
     "object.assign": "^2.0.1",
+    "thenify": "^3.1.0",
     "thenify-all": "^1.6.0"
   },
   "devDependencies": {

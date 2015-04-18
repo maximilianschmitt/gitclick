@@ -5,6 +5,8 @@ const co = require('co');
 const assign = require('object.assign');
 const store = require('./lib/store');
 const NoAccountSetError = require('./errors/no-account-set-error');
+const thenify = require('thenify');
+const exec = thenify(require('child_process').exec);
 
 const gitclick = function(storePath) {
   const s = store(storePath);
@@ -50,12 +52,18 @@ const gitclick = function(storePath) {
           }
         });
 
-        return provider.createRepository({
+        const repo = yield provider.createRepository({
           name: repository,
           wiki: opts.wiki,
           issues: opts.issues,
           private: opts.private
         });
+
+        if (opts.setRemote) {
+          yield exec(`git remote add ${opts.setRemote} ${repo.sshUrl}`, { cwd: process.cwd() });
+        }
+
+        return repo;
       });
     }
   };

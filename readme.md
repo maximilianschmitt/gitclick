@@ -8,7 +8,6 @@ Create remote repositories on GitHub/Bitbucket from your terminal.
 
 [Click here to watch a short 3-minute screencast on YouTube.](https://www.youtube.com/watch?v=Q1fFY4cGfmI)
 
-
 ## Installation
 
 ```
@@ -18,11 +17,15 @@ $ npm i gitclick -g
 ## Usage
 
 ```
-gitclick create [<repository>] [on <account>] [--no-issues] [--no-wiki] [--private]
+gitclick create [<repository>] [on <account>] [options]
 
-  Creates a public repository with issues and wiki by default
-  <repository> defaults to the name of the current folder
-  <account> defaults to the default account
+  <repository>    Defaults to the name of the current folder
+  <account>       Defaults to the default account
+
+  --set-remote    Add the created repo as remote ('origin' if not set to anything else)
+  --no-issues     Create the repository without issues
+  --no-wiki       Create the repository without a wiki
+  --private       Create the repository privately
 
 gitclick add                 Interactive prompt for creating a new account
 gitclick list                List your existing accountes

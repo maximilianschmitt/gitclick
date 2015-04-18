@@ -26,6 +26,10 @@ const argsParser = {
     // get repository
     opts.repository = args[0] || null;
 
+    if (argv['set-remote']) {
+      opts.setRemote = typeof argv['set-remote'] === 'boolean' ? 'origin' : argv['set-remote'];
+    }
+
     return opts;
   }
 };
