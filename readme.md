@@ -1,5 +1,7 @@
 # gitclick
 
+[![Travis Build](http://img.shields.io/travis/maximilianschmitt/mirco.svg?style=flat)](https://travis-ci.org/maximilianschmitt/gitclick)
+
 Create remote repositories on GitHub/Bitbucket from your terminal.
 
 ## Installation
@@ -37,7 +39,4 @@ export GITCLICK_STORAGE_PATH=~/Dropbox/.gitclick
 ## Todo
 
 * Write more tests
-
-### Maybe
-
-* Add optional encryption (should be easy with something like bcrypt)
+* Maybe: add optional encryption (should be easy with something like bcrypt)
