@@ -5,13 +5,24 @@ const co = require('co');
 const assign = require('object.assign');
 const store = require('./lib/store');
 const NoAccountSetError = require('./errors/no-account-set-error');
+const AlreadyEncryptedError = require('./errors/already-encrypted-error');
 const thenify = require('thenify');
 const exec = thenify(require('child_process').exec);
 
 const gitclick = function(storePath) {
-  const s = store(storePath);
+  let s = store(storePath);
 
   return {
+    encrypt: function(password) {
+      const oldStore = s;
+      s = store(storePath, password);
+
+      return oldStore.read().then(writeToNewStore);
+
+      function writeToNewStore(config) {
+        return s.write(config);
+      }
+    },
     list: function() {
       return s.getAccounts();
     },

@@ -1,7 +1,7 @@
 /* global describe, it */
 'use strict';
 
-const argsParser = require('../../bin/args-parser');
+const argsParser = require('../../lib/args-parser');
 const expect = require('chai').expect;
 
 describe('argsParser', function() {

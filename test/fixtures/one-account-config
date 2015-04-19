@@ -1,0 +1,10 @@
+{
+  "account": "private",
+  "accounts": {
+    "private": {
+      "provider": "github",
+      "username": "private-username",
+      "password": "private-password"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "account": "private",
+  "accounts": {
+    "private": {
+      "provider": "github",
+      "username": "private-username",
+      "password": "private-password"
+    },
+    "work": {
+      "provider": "github",
+      "username": "work-username",
+      "password": "work-password"
+    }
+  }
+}
