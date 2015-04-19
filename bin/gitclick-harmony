@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+var iojs = require('is-iojs');
+
+if (!iojs) {
+  require('babel/register');
+}
+
+require('./gitclick');
