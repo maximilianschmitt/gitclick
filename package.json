@@ -25,15 +25,17 @@
   },
   "main": "./main",
   "bin": {
-    "gitclick": "bin/gitclick"
+    "gitclick": "bin/gitclick-harmony"
   },
   "dependencies": {
+    "babel": "^4.0.1",
     "co": "^4.5.1",
     "create-error": "^0.3.1",
     "gitclick-provider-bitbucket": "0.0.3",
     "gitclick-provider-github": "0.0.3",
     "home-dir": "^1.0.0",
     "inquirer": "^0.8.2",
+    "is-iojs": "^1.1.0",
     "jsonfile": "^2.0.0",
     "minimist": "^1.1.1",
     "object.assign": "^2.0.1",
