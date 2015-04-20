@@ -1,9 +1,10 @@
 #!/usr/bin/env node
+'use strict';
 
 var iojs = require('is-iojs');
 
-var spawn = require('child_process').spawn;
-var args = ['bin/gitclick'].concat(process.argv.slice(2));
-var program = iojs ? process.argv[0] : './node_modules/.bin/babel-node';
+if (!iojs) {
+  require('babel/register')({ ignore: /gitclick\/node_modules/ });
+}
 
-spawn(program, args, { stdio: [0, 1, 2] });
+require('./gitclick');
