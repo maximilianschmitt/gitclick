@@ -35,6 +35,10 @@ const gitclick = function(storePath, password) {
         return s.write(config);
       }
     },
+    setPassword: function(value) {
+      password = value;
+      s = store(storePath, value);
+    },
     list: function() {
       return s.getAccounts();
     },

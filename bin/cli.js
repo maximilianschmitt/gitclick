@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const assign = require('object.assign');
 const inquirer = require('inquirer');
+const log = require('../lib/log');
 
 const prompt = function(opts) {
   return new Promise(function(res) {
@@ -14,73 +15,83 @@ const prompt = function(opts) {
 const cli = function(gitclick) {
   const api = {
     encrypt: function() {
-      return prompt([
-        {
-          type: 'password',
-          name: 'key',
-          message: 'Select a password'
-        },
-        {
-          type: 'password',
-          name: 'keyConfirmation',
-          message: 'Confirm your password'
-        }
-      ])
-      .then(function(answers) {
+      return askForPassword.then(encryptOrAskAgain).then(showUser).catch(handleError);
+
+      function askForPassword() {
+        return prompt([
+          {
+            type: 'password',
+            name: 'key',
+            message: 'Select a password'
+          },
+          {
+            type: 'password',
+            name: 'keyConfirmation',
+            message: 'Confirm your password'
+          }
+        ]);
+      }
+
+      function encryptOrAskAgain(answers) {
         if (answers.key !== answers.keyConfirmation) {
-          console.log('Error: Your passwords don\'t match, try again!');
+          log('Error: Your passwords don\'t match, try again!');
           api.encrypt();
           return;
         }
 
         return gitclick.encrypt(answers.key);
-      })
-      .then(function() {
-        console.log('Your gitclick configuration is now encrypted.');
-      })
-      .catch(function(err) {
+      }
+
+      function showUser() {
+        log('Your gitclick configuration is now encrypted.');
+      }
+
+      function handleError(err) {
         if (err.name === 'AlreadyEncryptedError') {
-          console.log('Error: Your gitclick configuration is already encrypted.');
-          console.log('You can `gitclick decrypt` to permanently decrypt your configuration and then encrypt again.');
+          log('Error: Your gitclick configuration is already encrypted.');
+          log('You can `gitclick decrypt` to permanently decrypt your configuration and then encrypt again.');
           return;
         }
 
-        console.log('Error: An unkown error occurred while trying to encrypt your configuration file.');
-      });
+        log('Error: An unkown error occurred while trying to encrypt your configuration file.');
+      }
     },
     create: function(opts) {
-      return gitclick
-        .create(opts)
-        .then(function(repository) {
-          console.log(`Repository '${repository.name}' created.`);
+      opts = opts || {};
 
-          if (opts.setRemote) {
-            console.log(`Remote '${opts.setRemote}' set to: ${repository.sshUrl}`);
-          }
+      return ensureAccess().then(createRepository).then(showUser).catch(handleError);
 
-          console.log('SSH URL: ' + repository.sshUrl);
-          console.log('Clone URL: ' + repository.cloneUrl);
-        })
-        .catch(function(err) {
-          if (err.name === 'NoAccountSetError') {
-            console.log('Error: No account set. Use `gitclick add` to add an account.');
-            return;
-          }
+      function createRepository() {
+        return gitclick.create(opts);
+      }
 
-          if (err.name === 'ProviderError' && err.message === 'Validation Failed') {
-            console.log('Error: Repository could not be created. Maybe it already exists?');
-            return;
-          }
+      function showUser(repository) {
+        log(`Repository '${repository.name}' created.`);
 
-          e(err);
-        });
+        if (opts.setRemote) {
+          log(`Remote '${opts.setRemote}' set to: ${repository.sshUrl}`);
+        }
+
+        log('SSH URL: ' + repository.sshUrl);
+        log('Clone URL: ' + repository.cloneUrl);
+      }
+
+      function handleError(err) {
+        if (err.name === 'NoAccountSetError') {
+          log('Error: No account set. Use `gitclick add` to add an account.');
+          return;
+        }
+
+        if (err.name === 'ProviderError' && err.message === 'Validation Failed') {
+          log('Error: Repository could not be created. Maybe it already exists?');
+          return;
+        }
+
+        e(err);
+      }
     },
     defaultAccount: function() {
-      return gitclick
-        .defaultAccount()
-        .then(function(account) {
-          console.log(account);
-        });
+      return gitclick.defaultAccount().then(log);
     },
     add: function() {
       let account, provider;
@@ -121,10 +132,10 @@ const cli = function(gitclick) {
         return gitclick.add(account, config);
       })
       .then(function() {
-        console.log(`Account '${account}' added.`);
+        log(`Account '${account}' added.`);
       })
       .catch(function(err) {
-        console.log(err.stack);
+        log(err.stack);
       });
     },
     list: function() {
@@ -138,34 +149,43 @@ const cli = function(gitclick) {
           const defaultAccount = result[1];
 
           accounts.forEach(function(account) {
-            console.log(`${account.account === defaultAccount ? '* ' : ''}${account.account} (${account.provider})`);
+            log(`${account.account === defaultAccount ? '* ' : ''}${account.account} (${account.provider})`);
           });
         });
     },
     remove: function(account) {
-      return gitclick
-        .remove(account)
-        .then(function() {
-          console.log(`Account '${account}' was removed.`);
-        });
+      return ensureAccess().then(removeAccount).then(showUser);
+
+      function removeAccount() {
+        return gitclick.remove(account);
+      }
+
+      function showUser() {
+        log(`Account '${account}' was removed.`);
+      }
     },
     use: function(account) {
-      return gitclick
-        .use(account)
-        .then(function() {
-          console.log(`Now using ${account} by default when creating new repositories.`);
-        })
-        .catch(function(err) {
-          if (err.name === 'AccountNotFoundError') {
-            console.log(`Error: Account '${account}' was not found.`);
-            return;
-          }
+      return ensureAccess().then(useAccount).then(showUser).catch(handleError);
 
-          e(err);
-        });
+      function useAccount() {
+        return gitclick.use(account);
+      }
+
+      function showUser() {
+        log(`Now using ${account} by default when creating new repositories.`);
+      }
+
+      function handleError(err) {
+        if (err.name === 'AccountNotFoundError') {
+          log(`Error: Account '${account}' was not found.`);
+          return;
+        }
+
+        e(err);
+      }
     },
     help: function() {
-      console.log(require('../package.json').version);
+      log(require('../package.json').version);
     },
     version: function() {
       return fs.createReadStream(path.join(__dirname, 'usage.txt')).pipe(process.stdout);
@@ -173,6 +193,24 @@ const cli = function(gitclick) {
   };
 
   return api;
+
+  function ensureAccess() {
+    return gitclick.isEncrypted().then(promptIfNecessary);
+    
+    function promptIfNecessary(isEncrypted) {
+      if (isEncrypted) {
+        return prompt({
+          type: 'password',
+          name: 'password',
+          message: 'The store is encrypted, please enter your password'
+        }).then(setPassword);
+      }
+    }
+
+    function setPassword(answer) {
+      gitclick.setPassword(answer.password);
+    }
+  }
 };
 
 function e(err) {

@@ -2,18 +2,11 @@
 'use strict';
 
 const minimist = require('minimist');
-const assign = require('object.assign');
 const argsParser = require('../lib/args-parser');
 const homeDir = require('home-dir');
 
 const gitclick = require('../main')(process.env.GITCLICK_STORAGE_PATH || homeDir('./.gitclick'));
 const cli = require('./cli')(gitclick);
-
-const prompt = function(opts) {
-  return new Promise(function(res) {
-    require('inquirer').prompt(opts, res);
-  });
-};
 
 const argv = minimist(process.argv.slice(2));
 
