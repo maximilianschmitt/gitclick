@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 'use strict';
 
-const path = require('path');
-const fs = require('fs');
 const minimist = require('minimist');
 const assign = require('object.assign');
 const argsParser = require('../lib/args-parser');
 const homeDir = require('home-dir');
-const co = require('co');
 
 const gitclick = require('../main')(process.env.GITCLICK_STORAGE_PATH || homeDir('./.gitclick'));
+const cli = require('./cli')(gitclick);
 
 const prompt = function(opts) {
   return new Promise(function(res) {
@@ -19,177 +17,38 @@ const prompt = function(opts) {
 
 const argv = minimist(process.argv.slice(2));
 
-function encrypt() {
-  prompt([
-    {
-      type: 'password',
-      name: 'key',
-      message: 'Select a password'
-    },
-    {
-      type: 'password',
-      name: 'keyConfirmation',
-      message: 'Confirm your password'
-    }
-  ])
-  .then(function(answers) {
-    if (answers.key !== answers.keyConfirmation) {
-      console.log('Error: Your passwords don\'t match, try again!');
-      encrypt();
-      return;
-    }
-
-    return gitclick.encrypt(answers.key);
-  })
-  .then(function() {
-    console.log('Your gitclick configuration is now encrypted.');
-  })
-  .catch(function(err) {
-    if (err.name === 'AlreadyEncryptedError') {
-      console.log('Error: Your gitclick configuration is already encrypted.');
-      console.log('You can `gitclick decrypt` to permanently decrypt your configuration and then encrypt again.');
-      return;
-    }
-
-    console.log('Error: An unkown error occurred while trying to encrypt your configuration file.');
-  });
-}
-
 function create() {
-  const opts = argsParser.create(argv);
-
-  gitclick
-    .create(opts)
-    .then(function(repository) {
-      console.log(`Repository '${repository.name}' created.`);
-
-      if (opts.setRemote) {
-        console.log(`Remote '${opts.setRemote}' set to: ${repository.sshUrl}`);
-      }
-
-      console.log('SSH URL: ' + repository.sshUrl);
-      console.log('Clone URL: ' + repository.cloneUrl);
-    })
-    .catch(function(err) {
-      if (err.name === 'NoAccountSetError') {
-        console.log('Error: No account set. Use `gitclick add` to add an account.');
-        return;
-      }
-
-      if (err.name === 'ProviderError' && err.message === 'Validation Failed') {
-        console.log('Error: Repository could not be created. Maybe it already exists?');
-        return;
-      }
-
-      e(err);
-    });
+  cli.create(argsParser.create(argv));
 }
 
 function defaultAccount() {
-  gitclick
-    .defaultAccount()
-    .then(function(account) {
-      console.log(account);
-    });
+  cli.defaultAccount();
 }
 
 function add() {
-  let account, provider;
-
-  prompt([
-    {
-      type: 'input',
-      name: 'account',
-      message: 'Choose a name',
-      validate: function(value) {
-        if (value.indexOf(' ') !== -1) {
-          return 'Please don\'t use spaces in your account\'s name';
-        }
-
-        return true;
-      }
-    },
-    {
-      type: 'list',
-      name: 'provider',
-      message: 'Where is your account hosted?',
-      default: 'github',
-      choices: [
-        { value: 'github', name: 'GitHub' },
-        { value: 'bitbucket', name: 'Bitbucket' }
-      ]
-    }
-  ])
-  .then(function(answers) {
-    account = answers.account;
-    provider = answers.provider;
-    
-    const Provider = require('gitclick-provider-' + provider);
-    return Provider.prompt();
-  })
-  .then(function(answers) {
-    const config = assign({ provider: provider }, answers);
-    return gitclick.add(account, config);
-  })
-  .then(function() {
-    console.log(`Account '${account}' added.`);
-  })
-  .catch(function(err) {
-    console.log(err.stack);
-  });
+  cli.add();
 }
 
 function list() {
-  co(function*() {
-    const accounts = yield gitclick.list();
-    const defaultAccount = yield gitclick.defaultAccount();
-
-    accounts.forEach(function(account) {
-      console.log(`${account.account === defaultAccount ? '* ' : ''}${account.account} (${account.provider})`);
-    });
-  });
+  cli.list();
 }
 
 function remove() {
   const account = argv._[1];
-
-  gitclick
-    .remove(account)
-    .then(function() {
-      console.log(`Account '${account}' was removed.`);
-    });
+  cli.remove(account);
 }
 
 function use() {
   const account = argv._[1];
-  
-  gitclick
-    .use(account)
-    .then(function() {
-      console.log(`Now using ${account} by default when creating new repositories.`);
-    })
-    .catch(function(err) {
-      if (err.name === 'AccountNotFoundError') {
-        console.log(`Error: Account '${account}' was not found.`);
-        return;
-      }
-
-      e(err);
-    });
+  cli.use(account);
 }
 
 function help() {
-  console.log(require('../package.json').version);
+  cli.help();
 }
 
 function version() {
-  fs.createReadStream(path.join(__dirname, 'usage.txt')).pipe(process.stdout);
-}
-
-function e(err) {
-  setTimeout(function() {
-    throw err;
-  });
+  cli.version();
 }
 
 switch (argv._[0]) {
