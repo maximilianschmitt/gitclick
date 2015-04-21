@@ -73,7 +73,7 @@ describe('jsonStore', function() {
 
   describe('write', function() {
     it('writes JSON to file', function() {
-      expect(jsonStore.write(c.nonExistingConfigPath, { account: null, accounts: {} }).then(readFile).then(JSON.parse))
+      return expect(jsonStore.write(c.nonExistingConfigPath, { account: null, accounts: {} }).then(readFile).then(JSON.parse))
         .to.eventually.deep.equal({ account: null, accounts: {} });
 
       function readFile() {
@@ -82,11 +82,19 @@ describe('jsonStore', function() {
     });
 
     it('encrypts JSON and writes it to file if `password` is provided', function() {
-      expect(jsonStore.write(c.nonExistingConfigPath, { account: null, accounts: {} }, c.password).then(readFile))
-        .to.eventually.deep.equal('SniP8lAKRBGS7jwuIIu6COxM4VL/XrhnlE9SoH7O5XrBERa+7rReF57iU2IRAbAM');
+      return expect(
+          jsonStore.write(c.nonExistingConfigPath, { account: null, accounts: {} }, c.password)
+          .then(readFile)
+          .then(toString)
+        )
+          .to.eventually.equal('w/gYRs08GryHtq/bc/8/w3qzDTyUDwGAAKfAvobKzQs=');
 
       function readFile() {
         return fs.readFile(c.nonExistingConfigPath);
+      }
+
+      function toString(buff) {
+        return buff.toString();
       }
     });
   });

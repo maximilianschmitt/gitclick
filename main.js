@@ -8,18 +8,19 @@ const NoAccountSetError = require('./errors/no-account-set-error');
 const AlreadyEncryptedError = require('./errors/already-encrypted-error');
 const thenify = require('thenify');
 const exec = thenify(require('child_process').exec);
+let GithubProvider = require('gitclick-provider-github');
+let BitbucketProvider = require('gitclick-provider-bitbucket');
 
-const gitclick = function(storePath) {
-  let s = store(storePath);
+const gitclick = function(storePath, password) {
+  let s = store(storePath, password);
 
   return {
-    encrypt: function(password) {
-      const oldStore = s;
-      s = store(storePath, password);
+    encrypt: function() {
+      const plaintextStore = store(storePath);
 
-      return oldStore.read().then(writeToNewStore);
+      return plaintextStore.read().then(writeEncrypted);
 
-      function writeToNewStore(config) {
+      function writeEncrypted(config) {
         return s.write(config);
       }
     },
@@ -48,7 +49,7 @@ const gitclick = function(storePath) {
         }
 
         const accountConfig = yield s.getAccountConfig(account);
-        const Provider = require('gitclick-provider-' + accountConfig.provider);
+        const Provider = accountConfig.provider === 'github' ? GithubProvider : BitbucketProvider;
 
         const provider = new Provider({
           auth: {

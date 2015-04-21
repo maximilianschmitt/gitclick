@@ -60,7 +60,7 @@ const testConfigs = {
   },
 
   resetEncryptedConfig: function() {
-    return fs.writeFile(encryptedConfigPath, 'SniP8lAKRBGS7jwuIIu6COxM4VL/XrhnlE9SoH7O5XrBERa+7rReF57iU2IRAbAM');
+    return fs.writeFile(encryptedConfigPath, 'w/gYRs08GryHtq/bc/8/w3qzDTyUDwGAAKfAvobKzQs=');
   },
 
   resetExistingConfig: function() {
