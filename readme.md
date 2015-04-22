@@ -27,11 +27,13 @@ gitclick create [<repository>] [on <account>] [options]
   --no-wiki       Create the repository without a wiki
   --private       Create the repository privately
 
-gitclick add                 Interactive prompt for creating a new account
-gitclick list                List your existing accountes
 gitclick use <account>       Set <account> as default account
+gitclick add                 Interactive prompt for creating a new account
 gitclick remove <account>    Remove <account>
+gitclick list                List your existing accountes
 gitclick default             Displays default account
+gitclick encrypt             Encrypt your configuration with a password
+gitclick decrypt             Permanently decrypt your configuration
 
 gitclick -v, --version       Output version number
 gitclick -h, --help          Output usage information
