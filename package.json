@@ -21,7 +21,9 @@
     "url": "https://github.com/maximilianschmitt/gitclick.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --recursive"
+    "test": "./node_modules/.bin/mocha --recursive",
+    "coverage": "./node_modules/istanbul-harmony/lib/cli.js cover ./node_modules/.bin/_mocha -- --recursive",
+    "ci-test": "./node_modules/istanbul-harmony/lib/cli.js cover ./node_modules/.bin/_mocha --report lcovonly -- --recursive && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
   "main": "./main",
   "bin": {
@@ -45,7 +47,9 @@
   "devDependencies": {
     "chai": "^2.2.0",
     "chai-as-promised": "^5.0.0",
+    "coveralls": "^2.11.2",
     "del": "^1.1.1",
+    "istanbul-harmony": "^0.3.12",
     "mocha": "^2.2.4",
     "proxyquire": "^1.4.0",
     "sinon": "^1.14.1",

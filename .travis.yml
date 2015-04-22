@@ -3,3 +3,4 @@ node_js:
   - iojs
 notifications:
   email: false
+script: "npm run ci-test"
