@@ -23,8 +23,10 @@ const providerPrompt = sinon.stub().resolves({ username: 'some-username', passwo
 
 const gitclickMock = function(opts) {
   return {
+    add: sinon.stub().resolves(),
+    encrypt: sinon.stub().resolves(),
     list: sinon.stub().resolves([]),
-    defaultAccount: sinon.stub.resolves('some-account'),
+    defaultAccount: sinon.stub().resolves('some-account'),
     setPassword: sinon.stub().resolves(),
     remove: sinon.stub().resolves(),
     use: sinon.stub().resolves(),
@@ -45,10 +47,69 @@ const cli = proxyquire('../../bin/cli', {
 });
 
 describe('cli', function() {
+  describe('encrypt', function() {
+    it('encrypts gitclick if both passwords match', function() {
+      const gcm = gitclickMock({ encrypted: false });
+      const gcli = cli(gcm);
+
+      promptMock.onPrompt = function(config, cb) {
+        cb({ password: 'a-test-password', passwordConfirmation: 'a-test-password' });
+      };
+
+      return expect(gcli.encrypt())
+        .to.eventually.be.fulfilled.then(checkForCall);
+
+      function checkForCall() {
+        expect(gcm.encrypt.called).to.equal(true);
+      }
+    });
+
+    it('prompts for passwords until they match', function() {
+      let pwPrompts = 0;
+      const gcm = gitclickMock({ encrypted: false });
+      const gcli = cli(gcm);
+
+      promptMock.onPrompt = function(config, cb) {
+        cb({ password: 'a-test-password-' + pwPrompts++, passwordConfirmation: 'a-test-password-1' });
+      };
+
+      return expect(gcli.encrypt())
+        .to.eventually.be.fulfilled.then(checkForCalls);
+
+      function checkForCalls() {
+        expect(pwPrompts).to.equal(2);
+        expect(gcm.encrypt.called).to.equal(true);
+      }
+    });
+
+    it('does nothing if the store is already encrypted', function() {
+      const gcm = gitclickMock({ encrypted: true });
+      const gcli = cli(gcm);
+
+      return expect(gcli.encrypt())
+        .to.eventually.be.fulfilled.then(checkForCall);
+
+      function checkForCall() {
+        expect(gcm.encrypt.called).to.equal(false);
+      }
+    });
+  });
+
   describe('create', function() {
     it('prompts for password if the store is encrypted', function() {
       const gcli = cli(gitclickMock({ encrypted: true }));
       return testPasswordPrompt(gcli.create());
+    });
+
+    it('creates repositories', function() {
+      const gcm = gitclickMock({ encrypted: false });
+      const gcli = cli(gcm);
+      return expect(gcli.create())
+        .to.eventually.be.fulfilled.then(checkForCall);
+
+      function checkForCall() {
+        expect(gcm.create.called).to.equal(true);
+      }
     });
   });
 
@@ -57,12 +118,34 @@ describe('cli', function() {
       const gcli = cli(gitclickMock({ encrypted: true }));
       return testPasswordPrompt(gcli.remove('some-account'));
     });
+
+    it('removes repositories', function() {
+      const gcm = gitclickMock({ encrypted: false });
+      const gcli = cli(gcm);
+      return expect(gcli.remove())
+        .to.eventually.be.fulfilled.then(checkForCall);
+
+      function checkForCall() {
+        expect(gcm.remove.called).to.equal(true);
+      }
+    });
   });
 
   describe('use', function() {
     it('prompts for password if the store is encrypted', function() {
       const gcli = cli(gitclickMock({ encrypted: true }));
       return testPasswordPrompt(gcli.use('some-account'));
+    });
+
+    it('sets repositories as default', function() {
+      const gcm = gitclickMock({ encrypted: false });
+      const gcli = cli(gcm);
+      return expect(gcli.use())
+        .to.eventually.be.fulfilled.then(checkForCall);
+
+      function checkForCall() {
+        expect(gcm.use.called).to.equal(true);
+      }
     });
   });
 
@@ -71,12 +154,34 @@ describe('cli', function() {
       const gcli = cli(gitclickMock({ encrypted: true }));
       return testPasswordPrompt(gcli.defaultAccount());
     });
+
+    it('shows the default account', function() {
+      const gcm = gitclickMock({ encrypted: false });
+      const gcli = cli(gcm);
+      return expect(gcli.defaultAccount())
+        .to.eventually.be.fulfilled.then(checkForCall);
+
+      function checkForCall() {
+        expect(gcm.defaultAccount.called).to.equal(true);
+      }
+    });
   });
 
   describe('list', function() {
     it('prompts for password if the store is encrypted', function() {
       const gcli = cli(gitclickMock({ encrypted: true }));
       return testPasswordPrompt(gcli.list());
+    });
+
+    it('lists accounts', function() {
+      const gcm = gitclickMock({ encrypted: false });
+      const gcli = cli(gcm);
+      return expect(gcli.list())
+        .to.eventually.be.fulfilled.then(checkForCall);
+
+      function checkForCall() {
+        expect(gcm.list.called).to.equal(true);
+      }
     });
   });
 
@@ -87,6 +192,22 @@ describe('cli', function() {
 
       function onPrompt(config, cb) {
         cb({ provider: 'github', account: 'some-account' });
+      }
+    });
+
+    it('adds accounts', function() {
+      const gcm = gitclickMock({ encrypted: false });
+      const gcli = cli(gcm);
+
+      promptMock.onPrompt = function(config, cb) {
+        cb({ provider: 'github', account: 'some-account' });
+      };
+
+      return expect(gcli.add())
+        .to.eventually.be.fulfilled.then(checkForCall);
+
+      function checkForCall() {
+        expect(gcm.add.called).to.equal(true);
       }
     });
   });

@@ -15,45 +15,44 @@ const prompt = function(opts) {
 const cli = function(gitclick) {
   const api = {
     encrypt: function() {
-      return askForPassword.then(encryptOrAskAgain).then(showUser).catch(handleError);
+      return gitclick.isEncrypted().then(cancelOrStartEncryption);
+
+      function cancelOrStartEncryption(isEncrypted) {
+        if (isEncrypted) {
+          log('Your gitclick configuration is already encrypted.');
+          return;
+        }
+
+        return askForPassword().then(encryptOrAskAgain).then(showUser);
+      }
 
       function askForPassword() {
         return prompt([
           {
             type: 'password',
-            name: 'key',
+            name: 'password',
             message: 'Select a password'
           },
           {
             type: 'password',
-            name: 'keyConfirmation',
+            name: 'passwordConfirmation',
             message: 'Confirm your password'
           }
         ]);
       }
 
       function encryptOrAskAgain(answers) {
-        if (answers.key !== answers.keyConfirmation) {
+        if (answers.password !== answers.passwordConfirmation) {
           log('Error: Your passwords don\'t match, try again!');
           api.encrypt();
           return;
         }
 
-        return gitclick.encrypt(answers.key);
+        return gitclick.encrypt(answers.password);
       }
 
       function showUser() {
         log('Your gitclick configuration is now encrypted.');
-      }
-
-      function handleError(err) {
-        if (err.name === 'AlreadyEncryptedError') {
-          log('Error: Your gitclick configuration is already encrypted.');
-          log('You can `gitclick decrypt` to permanently decrypt your configuration and then encrypt again.');
-          return;
-        }
-
-        log('Error: An unkown error occurred while trying to encrypt your configuration file.');
       }
     },
     create: function(opts) {
