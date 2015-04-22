@@ -91,67 +91,84 @@ const cli = function(gitclick) {
       }
     },
     defaultAccount: function() {
-      return gitclick.defaultAccount().then(log);
+      return ensureAccess().then(gitclick.defaultAccount).then(log);
     },
     add: function() {
       let account, provider;
 
-      return prompt([
-        {
-          type: 'input',
-          name: 'account',
-          message: 'Choose a name',
-          validate: function(value) {
-            if (value.indexOf(' ') !== -1) {
-              return 'Please don\'t use spaces in your account\'s name';
-            }
+      return ensureAccess()
+        .then(promptForNameAndProvider)
+        .then(setAccountAndProvider)
+        .then(promptForAuthInfo)
+        .then(addAccount)
+        .then(showUser)
+        .catch(handleError);
 
-            return true;
+      function promptForNameAndProvider() {
+        return prompt([
+          {
+            type: 'input',
+            name: 'account',
+            message: 'Choose a name',
+            validate: function(value) {
+              if (value.indexOf(' ') !== -1) {
+                return 'Please don\'t use spaces in your account\'s name';
+              }
+
+              return true;
+            }
+          },
+          {
+            type: 'list',
+            name: 'provider',
+            message: 'Where is your account hosted?',
+            default: 'github',
+            choices: [
+              { value: 'github', name: 'GitHub' },
+              { value: 'bitbucket', name: 'Bitbucket' }
+            ]
           }
-        },
-        {
-          type: 'list',
-          name: 'provider',
-          message: 'Where is your account hosted?',
-          default: 'github',
-          choices: [
-            { value: 'github', name: 'GitHub' },
-            { value: 'bitbucket', name: 'Bitbucket' }
-          ]
-        }
-      ])
-      .then(function(answers) {
-        account = answers.account;
-        provider = answers.provider;
-        
+        ]);
+      }
+
+      function setAccountAndProvider(accountAndProvider) {
+        account = accountAndProvider.account;
+        provider = accountAndProvider.provider;
+      }
+
+      function promptForAuthInfo() {
         const Provider = require('gitclick-provider-' + provider);
         return Provider.prompt();
-      })
-      .then(function(answers) {
-        const config = assign({ provider: provider }, answers);
+      }
+      
+      function addAccount(authInfo) {
+        const config = assign({ provider: provider }, authInfo);
         return gitclick.add(account, config);
-      })
-      .then(function() {
+      }
+
+      function showUser() {
         log(`Account '${account}' added.`);
-      })
-      .catch(function(err) {
+      }
+
+      function handleError(err) {
         log(err.stack);
-      });
+      }
     },
     list: function() {
-      return Promise
-        .all([
-          gitclick.list(),
-          gitclick.defaultAccount()
-        ])
-        .then(function(result) {
-          const accounts = result[0];
-          const defaultAccount = result[1];
+      return ensureAccess().then(getListAndDefaultAccount).then(showUser);
 
-          accounts.forEach(function(account) {
-            log(`${account.account === defaultAccount ? '* ' : ''}${account.account} (${account.provider})`);
-          });
+      function getListAndDefaultAccount() {
+        return Promise.all([gitclick.list(), gitclick.defaultAccount()]);
+      }
+
+      function showUser(results) {
+        const accounts = results[0];
+        const defaultAccount = results[1];
+
+        accounts.forEach(function(account) {
+          log(`${account.account === defaultAccount ? '* ' : ''}${account.account} (${account.provider})`);
         });
+      }
     },
     remove: function(account) {
       return ensureAccess().then(removeAccount).then(showUser);
@@ -185,10 +202,10 @@ const cli = function(gitclick) {
       }
     },
     help: function() {
-      log(require('../package.json').version);
+      return fs.createReadStream(path.join(__dirname, 'usage.txt')).pipe(process.stdout);
     },
     version: function() {
-      return fs.createReadStream(path.join(__dirname, 'usage.txt')).pipe(process.stdout);
+      log(require('../package.json').version);
     }
   };
 

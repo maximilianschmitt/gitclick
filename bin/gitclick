@@ -53,6 +53,6 @@ switch (argv._[0]) {
   case 'default': defaultAccount(); return;
 }
 
-if (argv.v || argv.version) { help(); return; }
+if (argv.v || argv.version) { version(); return; }
 
-version();
+help();
