@@ -57,9 +57,9 @@ describe('gitclick', function() {
 
   describe('encrypt', function() {
     it('encrypts the contents of the store', function() {
-      const gc = gitclick(c.defaultConfigPath, c.password);
+      const gc = gitclick(c.defaultConfigPath);
 
-      return expect(gc.encrypt().then(readFile).then(toString))
+      return expect(gc.encrypt(c.password).then(readFile).then(toString))
         .to.eventually.equal('w/gYRs08GryHtq/bc/8/w3qzDTyUDwGAAKfAvobKzQs=');
 
       function readFile() {
@@ -72,9 +72,9 @@ describe('gitclick', function() {
     });
 
     it('does not encrypt already encrypted stores', function() {
-      const gc = gitclick(c.encryptedConfigPath, c.password);
+      const gc = gitclick(c.encryptedConfigPath);
 
-      return expect(gc.encrypt()).to.eventually.be.rejected.then(verifyContent);
+      return expect(gc.encrypt(c.password)).to.eventually.be.rejected.then(verifyContent);
 
       function verifyContent() {
         return expect(readFile().then(toString))

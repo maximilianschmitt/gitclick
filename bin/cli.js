@@ -218,7 +218,7 @@ const cli = function(gitclick) {
         return prompt({
           type: 'password',
           name: 'password',
-          message: 'The store is encrypted, please enter your password'
+          message: 'Please enter your gitclick password'
         }).then(setPassword);
       }
     }

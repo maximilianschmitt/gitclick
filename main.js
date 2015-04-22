@@ -26,8 +26,9 @@ const gitclick = function(storePath, password) {
         return false;
       }
     },
-    encrypt: function() {
+    encrypt: function(password) {
       const plaintextStore = store(storePath);
+      this.setPassword(password);
 
       return plaintextStore.read().then(writeEncrypted);
 
