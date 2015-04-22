@@ -1,6 +1,6 @@
 {
   "name": "gitclick",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "dependencies": {
     "babel": {
       "version": "4.0.1",
