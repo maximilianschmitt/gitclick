@@ -86,8 +86,3 @@ You can specify where gitclick should store its configuration through the enviro
 ```
 export GITCLICK_STORAGE_PATH=~/Dropbox/.gitclick
 ```
-
-## Todo
-
-* Write more tests
-* Maybe: add optional encryption (should be easy with something like bcrypt)
