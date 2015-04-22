@@ -10,49 +10,30 @@ const cli = require('./cli')(gitclick);
 
 const argv = minimist(process.argv.slice(2));
 
-function create() {
+if (argv._[0] === 'encrypt') {
+  cli.encrypt();
+}
+else if (argv._[0] === 'create') {
   cli.create(argsParser.create(argv));
 }
-
-function defaultAccount() {
-  cli.defaultAccount();
-}
-
-function add() {
-  cli.add();
-}
-
-function list() {
+else if (argv._[0] === 'list') {
   cli.list();
 }
-
-function remove() {
-  const account = argv._[1];
-  cli.remove(account);
+else if (argv._[0] === 'add') {
+  cli.add();
 }
-
-function use() {
-  const account = argv._[1];
-  cli.use(account);
+else if (argv._[0] === 'remove') {
+  cli.remove(argv._[1]);
 }
-
-function help() {
-  cli.help();
+else if (argv._[0] === 'use') {
+  cli.use(argv._[1]);
 }
-
-function version() {
+else if (argv._[0] === 'default') {
+  cli.defaultAccount();
+}
+else if (argv.v || argv.version) {
   cli.version();
 }
-
-switch (argv._[0]) {
-  case 'create': create(); return;
-  case 'list': list(); return;
-  case 'add': add(); return;
-  case 'remove': remove(); return;
-  case 'use': use(); return;
-  case 'default': defaultAccount(); return;
+else {
+  cli.help();
 }
-
-if (argv.v || argv.version) { version(); return; }
-
-help();
