@@ -13,6 +13,9 @@ const argv = minimist(process.argv.slice(2));
 if (argv._[0] === 'encrypt') {
   cli.encrypt();
 }
+else if (argv._[0] === 'decrypt') {
+  cli.decrypt();
+}
 else if (argv._[0] === 'create') {
   cli.create(argsParser.create(argv));
 }

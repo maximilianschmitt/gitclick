@@ -36,6 +36,15 @@ const gitclick = function(storePath, password) {
         return s.write(config);
       }
     },
+    decrypt: function(password) {
+      const plaintextStore = store(storePath);
+
+      return s.read().then(writePlaintext);
+
+      function writePlaintext(config) {
+        return plaintextStore.write(config);
+      }
+    },
     setPassword: function(value) {
       password = value;
       s = store(storePath, value);

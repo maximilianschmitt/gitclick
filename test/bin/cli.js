@@ -25,6 +25,7 @@ const gitclickMock = function(opts) {
   return {
     add: sinon.stub().resolves(),
     encrypt: sinon.stub().resolves(),
+    decrypt: sinon.stub().resolves(),
     list: sinon.stub().resolves([]),
     defaultAccount: sinon.stub().resolves('some-account'),
     setPassword: sinon.stub().resolves(),
@@ -91,6 +92,29 @@ describe('cli', function() {
 
       function checkForCall() {
         expect(gcm.encrypt.called).to.equal(false);
+      }
+    });
+  });
+
+  describe('decrypt', function() {
+    it('prompts for password if the store is encrypted', function() {
+      const gcli = cli(gitclickMock({ encrypted: true }));
+      return testPasswordPrompt(gcli.decrypt());
+    });
+
+    it('decrypts encrypted stores', function() {
+      const gcm = gitclickMock({ encrypted: true });
+      const gcli = cli(gcm);
+
+      promptMock.onPrompt = function(config, cb) {
+        cb({ password: 'a-test-password' });
+      };
+
+      return expect(gcli.decrypt())
+        .to.eventually.be.fulfilled.then(checkForCall);
+
+      function checkForCall() {
+        expect(gcm.decrypt.called).to.equal(true);
       }
     });
   });

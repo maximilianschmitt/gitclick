@@ -17,6 +17,7 @@ Usage:
   gitclick list                List your existing accountes
   gitclick default             Displays default account
   gitclick encrypt             Encrypt your configuration with a password
+  gitclick decrypt             Permanently decrypt your configuration
 
   gitclick -v, --version       Output version number
   gitclick -h, --help          Output usage information

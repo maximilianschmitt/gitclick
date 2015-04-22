@@ -14,6 +14,17 @@ const prompt = function(opts) {
 
 const cli = function(gitclick) {
   const api = {
+    decrypt: function() {
+      return ensureAccess().then(decrypt).then(showUser);
+
+      function decrypt() {
+        return gitclick.decrypt();
+      }
+
+      function showUser() {
+        log('Your gitclick configuration is no longer encrypted.');
+      }
+    },
     encrypt: function() {
       return gitclick.isEncrypted().then(cancelOrStartEncryption);
 
@@ -23,10 +34,10 @@ const cli = function(gitclick) {
           return;
         }
 
-        return askForPassword().then(encryptOrAskAgain).then(showUser);
+        return promptForPasswords().then(encryptOrAskAgain).then(showUser);
       }
 
-      function askForPassword() {
+      function promptForPasswords() {
         return prompt([
           {
             type: 'password',

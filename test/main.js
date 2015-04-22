@@ -55,6 +55,19 @@ describe('gitclick', function() {
     expect(gitclick).to.be.a('function');
   });
 
+  describe('decrypt', function() {
+    it('decrypts the contents of the store', function() {
+      const gc = gitclick(c.encryptedConfigPath, c.password);
+
+      return expect(gc.decrypt().then(readFile).then(JSON.parse))
+        .to.eventually.deep.equal({ account: null, accounts: {} });
+
+      function readFile() {
+        return fs.readFile(c.defaultConfigPath);
+      }
+    });
+  });
+
   describe('encrypt', function() {
     it('encrypts the contents of the store', function() {
       const gc = gitclick(c.defaultConfigPath);
