@@ -32,6 +32,7 @@ gitclick add                 Interactive prompt for creating a new account
 gitclick remove <account>    Remove <account>
 gitclick list                List your existing accountes
 gitclick default             Displays default account
+
 gitclick encrypt             Encrypt your configuration with a password
 gitclick decrypt             Permanently decrypt your configuration
 
