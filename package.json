@@ -21,9 +21,8 @@
     "url": "https://github.com/maximilianschmitt/gitclick.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/mocha --recursive",
-    "coverage": "./node_modules/istanbul-harmony/lib/cli.js cover ./node_modules/.bin/_mocha -- --recursive",
-    "ci-test": "./node_modules/istanbul-harmony/lib/cli.js cover ./node_modules/.bin/_mocha --report lcovonly -- --recursive && cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+    "test": "./node_modules/istanbul-harmony/lib/cli.js cover ./node_modules/.bin/_mocha -- --recursive",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
   "main": "./main",
   "bin": {
