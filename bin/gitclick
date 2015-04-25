@@ -1,42 +1,4 @@
 #!/usr/bin/env node
 'use strict';
 
-const minimist = require('minimist');
-const argsParser = require('../lib/args-parser');
-const homeDir = require('home-dir');
-
-const gitclick = require('../main')(process.env.GITCLICK_STORAGE_PATH || homeDir('./.gitclick'));
-const cli = require('./cli')(gitclick);
-
-const argv = minimist(process.argv.slice(2));
-
-if (argv._[0] === 'encrypt') {
-  cli.encrypt();
-}
-else if (argv._[0] === 'decrypt') {
-  cli.decrypt();
-}
-else if (argv._[0] === 'create') {
-  cli.create(argsParser.create(argv));
-}
-else if (argv._[0] === 'list') {
-  cli.list();
-}
-else if (argv._[0] === 'add') {
-  cli.add();
-}
-else if (argv._[0] === 'remove') {
-  cli.remove(argv._[1]);
-}
-else if (argv._[0] === 'use') {
-  cli.use(argv._[1]);
-}
-else if (argv._[0] === 'default') {
-  cli.defaultAccount();
-}
-else if (argv.v || argv.version) {
-  cli.version();
-}
-else {
-  cli.help();
-}
+require(require('is-iojs') ? '../src/bin/gitclick' : '../es5/bin/gitclick');

@@ -1,12 +1,13 @@
 {
   "name": "gitclick",
   "version": "0.3.5",
-  "description": "Easily create remote repositories from your command line.",
+  "description": "Easily create remote GitHub and Bitbucket repositories from your command line.",
   "keywords": [
     "gitclick",
     "git",
     "github",
-    "bitbucket"
+    "bitbucket",
+    "productivity"
   ],
   "homepage": "https://github.com/maximilianschmitt/gitclick",
   "bugs": "https://github.com/maximilianschmitt/gitclick/issues",
@@ -21,33 +22,36 @@
     "url": "https://github.com/maximilianschmitt/gitclick.git"
   },
   "scripts": {
-    "test": "./node_modules/istanbul-harmony/lib/cli.js cover ./node_modules/.bin/_mocha -- --recursive",
-    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
+    "build": "babel src --out-dir es5",
+    "prepublish": "npm run build",
+    "test-es6": "./node_modules/istanbul-harmony/lib/cli.js cover _mocha -- src/test --recursive",
+    "test-es5": "istanbul cover _mocha -- es5/test --recursive",
+    "test": "if [ \"$(node -e \"console.log(require('is-iojs'))\")\" = \"true\" ]; then npm run test-es6; else npm run test-es5; fi;",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "main": "./main",
   "bin": {
-    "gitclick": "bin/gitclick-harmony"
+    "gitclick": "bin/gitclick"
   },
   "dependencies": {
-    "babel": "^4.0.1",
-    "co": "^4.5.1",
     "create-error": "^0.3.1",
     "gitclick-provider-bitbucket": "0.0.3",
     "gitclick-provider-github": "0.0.3",
     "home-dir": "^1.0.0",
     "inquirer": "^0.8.2",
     "is-iojs": "^1.1.0",
-    "jsonfile": "^2.0.0",
     "minimist": "^1.1.1",
     "object.assign": "^2.0.1",
     "thenify": "^3.1.0",
     "thenify-all": "^1.6.0"
   },
   "devDependencies": {
+    "babel": "^5.1.11",
     "chai": "^2.2.0",
     "chai-as-promised": "^5.0.0",
     "coveralls": "^2.11.2",
     "del": "^1.1.1",
+    "istanbul": "^0.3.13",
     "istanbul-harmony": "^0.3.12",
     "mocha": "^2.2.4",
     "proxyquire": "^1.4.0",
