@@ -26,7 +26,8 @@
     "prepublish": "npm run build",
     "test-es6": "./node_modules/istanbul-harmony/lib/cli.js cover _mocha -- src/test --recursive",
     "test-es5": "istanbul cover _mocha -- es5/test --recursive",
-    "test": "if [ \"$(node -e \"console.log(require('is-iojs'))\")\" = \"true\" ]; then npm run test-es6; else npm run test-es5; fi;",
+    "is-iojs": "node -e \"console.log(require('is-iojs'))\"",
+    "test": "if [ \"$(npm run is-iojs)\" = \"true\" ]; then npm run test-es6; else npm run test-es5; fi;",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "main": "./main",
