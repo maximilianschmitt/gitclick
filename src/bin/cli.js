@@ -215,7 +215,7 @@ const cli = function(gitclick) {
       return fs.createReadStream(path.join(__dirname, 'usage.txt')).pipe(process.stdout);
     },
     version: function() {
-      log(require('../package.json').version);
+      log(require('../../package.json').version);
     }
   };
 

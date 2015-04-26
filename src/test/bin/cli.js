@@ -1,4 +1,4 @@
-/* global describe, it, beforeEach, afterEach */
+/* global describe, it, beforeEach, afterEach, before, after */
 'use strict';
 
 require('sinon-as-promised');
@@ -7,6 +7,8 @@ const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
 const proxyquire = require('proxyquire');
+const through = require('through2');
+const fs = require('fs');
 
 chai.use(require('chai-as-promised'));
 
@@ -22,6 +24,8 @@ const promptMock = function(config, cb) {
 const providerPrompt = sinon.stub().resolves({ username: 'some-username', password: 'some-password' });
 
 const gitclickMock = function(opts) {
+  opts = opts || {};
+
   return {
     add: sinon.stub().resolves(),
     encrypt: sinon.stub().resolves(),
@@ -40,8 +44,10 @@ const gitclickMock = function(opts) {
   };
 };
 
+const logMock = sinon.stub();
+
 const cli = proxyquire('../../bin/cli', {
-  '../lib/log': sinon.stub(),
+  '../lib/log': logMock,
   'inquirer': { prompt: promptMock },
   'gitclick-provider-github': { prompt: providerPrompt },
   'gitclick-provider-bitbucket': { prompt: providerPrompt }
@@ -233,6 +239,51 @@ describe('cli', function() {
       function checkForCall() {
         expect(gcm.add.called).to.equal(true);
       }
+    });
+  });
+
+  describe('version', function() {
+    it('logs the current version to the console', function() {
+      const gcli = cli(gitclickMock());
+
+      gcli.version();
+      expect(logMock.args[logMock.args.length - 1][0]).to.equal(require('../../../package.json').version);
+    });
+  });
+
+  describe('help', function() {
+    it('logs usage.txt to the console', function(done) {
+      const gcli = cli(gitclickMock());
+
+      let data = '';
+
+      const log = process.stdout.write;
+      process.stdout.write = function() {};
+
+      process.stdout.once('pipe', pipeIt);
+
+      function pipeIt(pipe) {
+        pipe.pipe(through(onData, flush));
+        pipe.on('error', onError);
+      }
+
+      function onError(err) {
+        process.stdout.write = log;
+        done(err);
+      }
+
+      function onData(chunk, enc, cb) {
+        data += chunk.toString();
+        cb();
+      }
+
+      function flush() {
+        expect(data).to.equal(fs.readFileSync(__dirname + '/../../bin/usage.txt').toString());
+        process.stdout.write = log;
+        done();
+      }
+
+      gcli.help();
     });
   });
 
