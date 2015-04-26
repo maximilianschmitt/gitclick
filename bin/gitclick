@@ -1,4 +1,5 @@
 #!/usr/bin/env node
 'use strict';
 
+global.Promise = require('native-or-bluebird');
 require(require('is-iojs') ? '../src/bin/gitclick' : '../es5/bin/gitclick');
