@@ -1,10 +1,10 @@
 {
   "name": "gitclick",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "dependencies": {
     "bluebird": {
       "version": "2.9.24",
-      "from": "bluebird@",
+      "from": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.24.tgz",
       "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.24.tgz"
     },
     "create-error": {
@@ -130,7 +130,7 @@
                 },
                 "inherits": {
                   "version": "2.0.1",
-                  "from": "inherits@2.0.1",
+                  "from": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz",
                   "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
                 }
               }
@@ -237,7 +237,7 @@
         },
         "lodash": {
           "version": "3.7.0",
-          "from": "lodash@>=3.2.0 <4.0.0",
+          "from": "https://registry.npmjs.org/lodash/-/lodash-3.7.0.tgz",
           "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.7.0.tgz"
         },
         "readline2": {
@@ -278,6 +278,11 @@
       "version": "1.1.1",
       "from": "https://registry.npmjs.org/minimist/-/minimist-1.1.1.tgz",
       "resolved": "https://registry.npmjs.org/minimist/-/minimist-1.1.1.tgz"
+    },
+    "native-or-bluebird": {
+      "version": "1.2.0",
+      "from": "native-or-bluebird@",
+      "resolved": "https://registry.npmjs.org/native-or-bluebird/-/native-or-bluebird-1.2.0.tgz"
     },
     "object.assign": {
       "version": "2.0.1",
