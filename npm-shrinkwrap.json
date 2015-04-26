@@ -2,6 +2,11 @@
   "name": "gitclick",
   "version": "0.4.4",
   "dependencies": {
+    "bluebird": {
+      "version": "2.9.24",
+      "from": "bluebird@",
+      "resolved": "https://registry.npmjs.org/bluebird/-/bluebird-2.9.24.tgz"
+    },
     "create-error": {
       "version": "0.3.1",
       "from": "https://registry.npmjs.org/create-error/-/create-error-0.3.1.tgz",
@@ -125,7 +130,7 @@
                 },
                 "inherits": {
                   "version": "2.0.1",
-                  "from": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz",
+                  "from": "inherits@2.0.1",
                   "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.1.tgz"
                 }
               }
@@ -232,7 +237,7 @@
         },
         "lodash": {
           "version": "3.7.0",
-          "from": "https://registry.npmjs.org/lodash/-/lodash-3.7.0.tgz",
+          "from": "lodash@>=3.2.0 <4.0.0",
           "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.7.0.tgz"
         },
         "readline2": {
