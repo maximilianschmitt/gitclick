@@ -1,6 +1,6 @@
 {
   "name": "gitclick",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "dependencies": {
     "bluebird": {
       "version": "2.9.24",
