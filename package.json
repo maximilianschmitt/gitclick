@@ -1,6 +1,6 @@
 {
   "name": "gitclick",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "description": "Easily create remote GitHub and Bitbucket repositories from your command line.",
   "keywords": [
     "gitclick",
