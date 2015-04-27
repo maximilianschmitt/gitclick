@@ -4,6 +4,8 @@
 
 Create remote repositories on GitHub/Bitbucket from your terminal.
 
+![Examples](gitclick-examples.gif)
+
 ## Screencast
 
 [Click here to watch a short 3-minute screencast on YouTube.](https://www.youtube.com/watch?v=Q1fFY4cGfmI)
