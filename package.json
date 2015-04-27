@@ -36,7 +36,7 @@
   "dependencies": {
     "bluebird": "^2.9.24",
     "create-error": "^0.3.1",
-    "gitclick-provider-bitbucket": "0.0.3",
+    "gitclick-provider-bitbucket": "0.0.4",
     "gitclick-provider-github": "0.0.3",
     "home-dir": "^1.0.0",
     "inquirer": "^0.8.2",
