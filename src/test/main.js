@@ -1,19 +1,17 @@
 /* global describe, it */
 'use strict';
 
-const ProviderMock = function(opts) {
-  ProviderMock.opts = opts;
-  ProviderMock.repository = null;
-
-  this.createRepository = function(opts) {
-    ProviderMock.repository = opts;
+const providerMock = {
+  createRepository: function(repository, auth) {
+    providerMock.repository = repository;
+    providerMock.auth = auth;
 
     return Promise.resolve({
-      name: opts.name,
-      sshUrl: `https://provider/${opts.name}`,
-      cloneUrl: `https://provider/${opts.name}`
+      name: repository.name,
+      sshUrl: `https://provider/${repository.name}`,
+      cloneUrl: `https://provider/${repository.name}`
     });
-  };
+  }
 };
 
 const gitMock = function(cwd) {
@@ -43,8 +41,8 @@ const chai = require('chai');
 const expect = chai.expect;
 const fs = require('thenify-all')(require('fs'));
 const gitclick = proxyquire('../main', {
-  'gitclick-provider-github': ProviderMock,
-  'gitclick-provider-bitbucket': ProviderMock,
+  'gitclick-provider-github': providerMock,
+  'gitclick-provider-bitbucket': providerMock,
   './lib/git': gitMock
 });
 
@@ -153,7 +151,7 @@ describe('gitclick', function() {
         .to.eventually.be.fulfilled.then(checkIssues);
 
       function checkIssues() {
-        expect(ProviderMock.repository.issues).to.equal(true);
+        expect(providerMock.repository.issues).to.equal(true);
       }
     });
 
@@ -164,7 +162,7 @@ describe('gitclick', function() {
         .to.eventually.be.fulfilled.then(checkWiki);
 
       function checkWiki() {
-        expect(ProviderMock.repository.wiki).to.equal(true);
+        expect(providerMock.repository.wiki).to.equal(true);
       }
     });
 
@@ -175,7 +173,7 @@ describe('gitclick', function() {
         .to.eventually.be.fulfilled.then(checkVisibility);
 
       function checkVisibility() {
-        expect(ProviderMock.repository.private).to.equal(false);
+        expect(providerMock.repository.private).to.equal(false);
       }
     });
 
@@ -186,7 +184,7 @@ describe('gitclick', function() {
         .to.eventually.be.fulfilled.then(checkIssues);
 
       function checkIssues() {
-        expect(ProviderMock.repository.issues).to.equal(false);
+        expect(providerMock.repository.issues).to.equal(false);
       }
     });
 
@@ -197,7 +195,7 @@ describe('gitclick', function() {
         .to.eventually.be.fulfilled.then(checkWiki);
 
       function checkWiki() {
-        expect(ProviderMock.repository.wiki).to.equal(false);
+        expect(providerMock.repository.wiki).to.equal(false);
       }
     });
 
@@ -208,7 +206,7 @@ describe('gitclick', function() {
         .to.eventually.be.fulfilled.then(checkVisibility);
 
       function checkVisibility() {
-        expect(ProviderMock.repository.private).to.equal(true);
+        expect(providerMock.repository.private).to.equal(true);
       }
     });
 
@@ -219,8 +217,7 @@ describe('gitclick', function() {
         .to.eventually.be.fulfilled.then(checkAuthConfig);
 
       function checkAuthConfig() {
-        expect(ProviderMock.opts.auth).to.deep.equal({
-          type: 'basic',
+        expect(providerMock.auth).to.deep.equal({
           username: 'private-username',
           password: 'private-password'
         });

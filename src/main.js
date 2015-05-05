@@ -6,8 +6,8 @@ const store = require('./lib/store');
 const git = require('./lib/git');
 const NoAccountSetError = require('./errors/no-account-set-error');
 const AlreadyEncryptedError = require('./errors/already-encrypted-error');
-const GithubProvider = require('gitclick-provider-github');
-const BitbucketProvider = require('gitclick-provider-bitbucket');
+const githubProvider = require('gitclick-provider-github');
+const bitbucketProvider = require('gitclick-provider-bitbucket');
 
 const gitclick = function(storePath, password) {
   let s = store(storePath, password);
@@ -88,26 +88,16 @@ const gitclick = function(storePath, password) {
       }
 
       function createRepository(accountConfig) {
-        const Provider = accountConfig.provider === 'github' ? GithubProvider : BitbucketProvider;
-
-        const provider = new Provider({
-          auth: {
-            type: 'basic',
-            username: accountConfig.username,
-            password: accountConfig.password
-          },
-          defaults: {
-            wiki: typeof opts.wiki === 'boolean' ? opts.wiki : true,
-            issues: typeof opts.issues === 'boolean' ? opts.issues : true,
-            private: typeof opts.private === 'boolean' ? opts.private : false
-          }
-        });
+        const provider = accountConfig.provider === 'github' ? githubProvider : bitbucketProvider;
 
         return provider.createRepository({
           name: opts.repository || path.basename(process.cwd()),
           wiki: typeof opts.wiki === 'boolean' ? opts.wiki : true,
           issues: typeof opts.issues === 'boolean' ? opts.issues : true,
           private: typeof opts.private === 'boolean' ? opts.private : false
+        }, {
+          username: accountConfig.username,
+          password: accountConfig.password
         });
       }
 
