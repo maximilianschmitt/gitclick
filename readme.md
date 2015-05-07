@@ -19,15 +19,16 @@ $ npm i gitclick -g
 ## Usage
 
 ```
-gitclick create [<repository>] [on <account>] [options]
+gitclick create [<repository>] [as <organisation>] [on <account>] [options]
 
-  <repository>    Defaults to the name of the current folder
-  <account>       Defaults to the default account
+  <repository>      Defaults to the name of the current folder
+  <organisation>    Defaults to personal account
+  <account>         Defaults to the default account
 
-  --set-remote    Add the created repo as remote ('origin' if not set to anything else)
-  --no-issues     Create the repository without issues
-  --no-wiki       Create the repository without a wiki
-  --private       Create the repository privately
+  --set-remote      Add the created repo as remote ('origin' if not set to anything else)
+  --no-issues       Create the repository without issues
+  --no-wiki         Create the repository without a wiki
+  --private         Create the repository privately
 
 gitclick use <account>       Set <account> as default account
 gitclick add                 Interactive prompt for creating a new account

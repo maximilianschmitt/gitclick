@@ -209,6 +209,17 @@ describe('gitclick', function() {
         expect(providerMock.repository.private).to.equal(true);
       }
     });
+    
+    it('creates repositories for a specific team specified', function() {
+      const gc = gitclick(c.existingConfigPath);
+
+      return expect(gc.create({ team: 'some-team' }))
+        .to.eventually.be.fulfilled.then(checkTeam);
+
+      function checkTeam() {
+        expect(providerMock.repository.team).to.equal('some-team');
+      }
+    });
 
     it('configures the provider with the necessary auth information', function() {
       const gc = gitclick(c.existingConfigPath);

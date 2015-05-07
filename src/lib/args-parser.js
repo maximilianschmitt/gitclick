@@ -11,7 +11,7 @@ const argsParser = {
     };
     
     // get account
-    let iOn = args.indexOf('on');
+    const iOn = args.indexOf('on');
     if (iOn !== -1) {
       opts.account = args[iOn + 1] || null;
       // clean up
@@ -21,6 +21,19 @@ const argsParser = {
       args.splice(iOn, 1);
     } else {
       opts.account = null;
+    }
+
+    // get team
+    const iAs = args.indexOf('as');
+    if (iAs !== -1) {
+      opts.team = args[iAs + 1] || null;
+      // clean up
+      if (opts.team) {
+        args.splice(iAs + 1, 1);
+      }
+      args.splice(iAs, 1);
+    } else {
+      opts.team = null;
     }
 
     // get repository

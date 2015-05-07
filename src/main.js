@@ -92,6 +92,7 @@ const gitclick = function(storePath, password) {
 
         return provider.createRepository({
           name: opts.repository || path.basename(process.cwd()),
+          team: opts.team || null,
           wiki: typeof opts.wiki === 'boolean' ? opts.wiki : true,
           issues: typeof opts.issues === 'boolean' ? opts.issues : true,
           private: typeof opts.private === 'boolean' ? opts.private : false
