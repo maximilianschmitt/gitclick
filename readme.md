@@ -1,6 +1,6 @@
 # gitclick
 
-[![Travis Build](http://img.shields.io/travis/maximilianschmitt/gitclick.svg?style=flat)](https://travis-ci.org/maximilianschmitt/gitclick) [![Code Coverage](https://img.shields.io/coveralls/maximilianschmitt/gitclick.svg)](https://coveralls.io/r/maximilianschmitt/gitclick)
+[![Travis Build](http://img.shields.io/travis/maximilianschmitt/gitclick.svg?style=flat)](https://travis-ci.org/maximilianschmitt/gitclick) [![Code Coverage](https://img.shields.io/coveralls/maximilianschmitt/gitclick.svg)](https://coveralls.io/r/maximilianschmitt/gitclick) [![npm](https://img.shields.io/npm/dm/gitclick.svg)](https://www.npmjs.com/package/gitclick)
 
 Create remote repositories on GitHub/Bitbucket from your terminal.
 
