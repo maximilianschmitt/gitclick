@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "babel src --out-dir es5 && babel src/bin/gitclick --out-file es5/bin/gitclick && cp -r src/test/fixtures es5/test/ && cp src/bin/usage.txt es5/bin/usage.txt",
-    "prepublish": "npm shrinkwrap && npm run build",
+    "prepublish": "npm run build",
     "test-es6": "./node_modules/istanbul-harmony/lib/cli.js cover _mocha -- src/test --recursive",
     "test-es5": "istanbul cover _mocha -- es5/test --recursive",
     "test": "if [ \"$(node -e \"console.log(require('is-iojs'))\")\" = \"true\" ]; then npm run test-es6; else npm run test-es5; fi;",
