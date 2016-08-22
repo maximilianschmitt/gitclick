@@ -19,10 +19,10 @@ $ npm i gitclick -g
 ## Usage
 
 ```
-gitclick create [<repository>] [as <organisation>] [on <account>] [options]
+gitclick create [<repository>] [as <organization>] [on <account>] [options]
 
   <repository>      Defaults to the name of the current folder
-  <organisation>    Defaults to personal account
+  <organization>    Defaults to personal account
   <account>         Defaults to the default account
 
   --set-remote      Add the created repo as remote ('origin' if not set to anything else)
@@ -33,7 +33,7 @@ gitclick create [<repository>] [as <organisation>] [on <account>] [options]
 gitclick use <account>       Set <account> as default account
 gitclick add                 Interactive prompt for creating a new account
 gitclick remove <account>    Remove <account>
-gitclick list                List your existing accountes
+gitclick list                List your existing accounts
 gitclick default             Displays default account
 
 gitclick encrypt             Encrypt your configuration with a password
